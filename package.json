@@ -1,0 +1,24 @@
+{
+  "name": "contactlist",
+  "version": "1.0.0",
+  "description": "Simple contact list app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcos",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "*",
+    "flux": "*",
+    "gulp": "*",
+    "reactify": "*",
+    "vinyl-source-stream": "*",
+    "object-assign": "*"
+  },
+  "dependencies": {
+    "firebase": "^2.4.2",
+    "react": "*",
+    "react-dom": "*"
+  }
+}
