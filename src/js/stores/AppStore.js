@@ -7,6 +7,7 @@ var AppAPI = require('../utils/AppAPI.js');
 var CHANGE_EVENT = 'change';
 
 var _contacts = [];
+var _contact_to_edit = '';
 
 var AppStore = assign({}, EventEmitter.prototype,{
     getContacts: function(){
@@ -17,6 +18,24 @@ var AppStore = assign({}, EventEmitter.prototype,{
     },
     setContacts: function(contacts){
         _contacts = contacts;
+    },
+    removeContact: function(contactId){
+        var index = _contacts.findIndex(x => x.id === contactId);
+        _contacts.splice(index, 1);
+    },
+    setContactToEdit: function(contact){
+        _contact_to_edit = contact;
+    },
+    getContactToEdit: function(){
+        return _contact_to_edit;
+    },
+    updateContact: function(contact){
+        for(i = 0; i < _contacts.length; i++ ){
+            if(_contacts[i].id == contact.id){
+                _contacts.splice(i, 1);
+                _contacts.push(contact);
+            }
+        }
     },
     emitChange: function(){
         this.emit(CHANGE_EVENT);
@@ -45,11 +64,47 @@ AppDispatcher.register(function(payload){
             //Emit Change
             AppStore.emit(CHANGE_EVENT);
             break;  
+        
         case AppConstants.RECEIVE_CONTACTS:
             console.log('receiving contacts');
 
             //Store Save
             AppStore.setContacts(action.contacts); 
+
+            //Emit Change
+            AppStore.emit(CHANGE_EVENT);
+            break;
+
+        case AppConstants.REMOVE_CONTACT:
+            console.log('removing contact');
+
+            //Store Remove
+            AppStore.removeContact(action.contactId); 
+
+            // API Remove
+            AppAPI.removeContact(action.contactId);
+
+            //Emit Change
+            AppStore.emit(CHANGE_EVENT);
+            break;
+
+        case AppConstants.EDIT_CONTACT:
+
+            //Store Remove
+            AppStore.setContactToEdit(action.contact);
+                           
+            //Emit Change
+            AppStore.emit(CHANGE_EVENT);
+            break;  
+
+        case AppConstants.UPDATE_CONTACT:
+            console.log('updating contact');
+
+            //Store Remove
+            AppStore.updateContact(action.contact); 
+
+            // API Update
+            AppAPI.updateContact(action.contact);
 
             //Emit Change
             AppStore.emit(CHANGE_EVENT);
